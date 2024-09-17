@@ -78,7 +78,31 @@ Como qualquer bit shift era permitido, eu utilizei o Arithmetic Shift pois ele p
 
 ##### Mutiplicador
 
-O multiplicador basicamente uma soma com os números em left shift equivalente à sua posição em relação ao segundo valor, resultando no seguindo multiplicador de 4 bits:
+O multiplicador basicamente uma soma com os números em left shift equivalente à sua posição em relação ao segundo valor, resultando no seguinte multiplicador de 4 bits:
 
 ![4 bit multiplier](./Media/4bit-MULT.png)
 
+Inclusive, esse é o primeiro uso do CHOOSER, que, primeiramente, eu havia usado para escolher a operação com o OPCODE, na ALU. Ele se adequou perfeitamente aqui também, seguindo a lógica da multiplicação.
+
+
+#### ALU
+
+Por fim, juntando todas as operações, sempre teremos dois inputs (A e B) de oito bits e um input (OP) que decidirá qual operação será executada com os dois inputs:
+
+![ULA completa](./Media/8bit-ULA.png)
+
+Aqui, utilizo dois plexers para dividir as operações escolhidas. As operações possíveis e seus _op codes_ se dão da seguinte forma:
+
+- **001:** Soma;
+- **010:** Subtração;
+- **011:** Multiplicação;
+- **100:** Left Bit Shift;
+- **101:** Comparação.
+
+### Demonstração
+
+O resultado final da junção da ULA com um display pode ser visto nos seguintes esquemas e demonstração:
+
+![Ula com Display](./Media/Display.png)
+
+![Demonstração das operações](./demonstração.webm)
