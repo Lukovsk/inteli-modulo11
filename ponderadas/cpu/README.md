@@ -106,3 +106,5 @@ O resultado final da junção da ULA com um display pode ser visto nos seguintes
 ![Ula com Display](./Media/Display.png)
 
 ![Demonstração das operações](./demonstração.webm)
+
+Inclusive, foi usado um display hexadecimal para simplificar a visualização do resultado das operações. Além disso, o resultado da operação de comparação é mostrado diretamente na ULA como um output.
