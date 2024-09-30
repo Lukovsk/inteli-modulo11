@@ -2,6 +2,9 @@ use crate::Tensor;
 
 pub struct Layer {
     tensors: Vec<Tensor>,
+    learning_rate: f32,
+    activation_function: fn(f32) -> f32,
+    derivative_activation_function: fn(f32) -> f32,
 }
 
 impl Layer {

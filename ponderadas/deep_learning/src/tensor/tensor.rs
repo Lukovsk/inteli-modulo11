@@ -9,7 +9,6 @@ pub struct Tensor {
 
 impl Tensor {
     pub fn new(rows: usize, cols: usize, matrix: Vec<Vec<f32>>) -> Tensor {
-        // Verifica se a matriz tem as dimensões corretas
         if matrix.len() != rows || matrix[0].len() != cols {
             panic!(
                 "Invalid matrix dimensions: expected {}x{}, got {}x{}",
@@ -21,13 +20,12 @@ impl Tensor {
         }
 
         Tensor {
-            matrix: matrix,
+            matrix,
             shape: Shape { rows, cols },
         }
     }
 
     pub fn convolution(&mut self, kernel: &Vec<Vec<f32>>) -> Tensor {
-        // Verificação das dimensões do kernel
         if self.shape.rows < kernel.len() || self.shape.cols < kernel[0].len() {
             panic!(
                 "Invalid matrix dimensions for convolution: matrix is {}x{}, kernel is {}x{}",
@@ -38,7 +36,6 @@ impl Tensor {
             );
         }
 
-        // Dimensões do novo tensor após a convolução
         let rows = self.shape.rows - kernel.len() + 1;
         let cols = self.shape.cols - kernel[0].len() + 1;
 
@@ -60,7 +57,6 @@ impl Tensor {
     }
 
     pub fn average_pooling(&mut self, shape: Shape) -> Tensor {
-        // Verifica se o pooling pode ser aplicado
         if self.shape.rows % shape.rows != 0 || self.shape.cols % shape.cols != 0 {
             panic!("Invalid pooling size");
         }
@@ -86,7 +82,6 @@ impl Tensor {
     }
 
     pub fn max_pooling(&mut self, shape: Shape) -> Tensor {
-        // Verifica se o pooling pode ser aplicado
         if self.shape.rows % shape.rows != 0 || self.shape.cols % shape.cols != 0 {
             panic!("Invalid pooling size");
         }
@@ -130,6 +125,38 @@ impl Tensor {
         flatten_vector
     }
 
+    pub fn flatten_to_column(&mut self) -> Tensor {
+        let mut flatten_vector: Tensor = Tensor::new(
+            self.shape.get_size(),
+            1,
+            vec![vec![0.0; 1]; self.shape.get_size()],
+        );
+
+        let mut counter: usize = 0;
+        for col in 0..self.shape.cols {
+            for row in 0..self.shape.rows {
+                flatten_vector.matrix[counter][0] = self.matrix[row][col];
+                counter += 1;
+            }
+        }
+        flatten_vector
+    }
+
+    pub fn apply(&mut self, function: fn(number: f32) -> f32) -> Tensor {
+        let mut new_tensor = Tensor::new(
+            self.shape.rows,
+            self.shape.cols,
+            vec![vec![0.0; self.shape.cols]; self.shape.rows],
+        );
+
+        for i in 0..new_tensor.shape.cols {
+            for j in 0..self.shape.rows {
+                new_tensor.matrix[j][i] = function(self.matrix[j][i]);
+            }
+        }
+        new_tensor
+    }
+
     pub fn dot_product(&mut self, b: Tensor) -> f32 {
         if self.shape.cols != b.shape.rows {
             panic!(
@@ -148,14 +175,10 @@ impl Tensor {
         sum
     }
 
-    pub fn cross_product(&mut self, b: Tensor) -> Tensor {
-        b
-    }
-
     pub fn product(&mut self, b: Tensor) -> Tensor {
         if self.shape.cols != b.shape.rows {
             panic!(
-                "Invalid matrix dimensions for cross product: {}x{} and {}x{}",
+                "Invalid matrix dimensions for product: {}x{} and {}x{}",
                 self.shape.rows, self.shape.cols, b.shape.rows, b.shape.cols
             );
         }
@@ -179,11 +202,3 @@ impl Tensor {
         new_tensor
     }
 }
-
-// let mut sum: f32 = 0.0;
-//                 for i in 0..kernel.len() {
-//                     for j in 0..kernel[0].len() {
-//                         sum += self.matrix[row + i][col + j] * kernel[i][j];
-//                     }
-//                 }
-//                 new_tensor.matrix[row][col] = sum;

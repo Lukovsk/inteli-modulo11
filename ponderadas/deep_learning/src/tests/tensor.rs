@@ -134,26 +134,71 @@ fn test_tensor_max_pooling_2() {
 }
 
 #[test]
-fn test_tensor_cross_product() {
+fn test_flattened_tensor_product() {
     let mut tensor = Tensor::new(
         3,
-        3,
+        4,
         vec![
-            vec![20.0, 24.0, 11.0],
-            vec![19.0, 17.0, 20.0],
-            vec![21.0, 40.0, 25.0],
+            vec![20.0, 24.0, 11.0, 11.0],
+            vec![19.0, 17.0, 20.0, 11.0],
+            vec![21.0, 40.0, 25.0, 11.0],
         ],
     );
 
-    let tensor_b = Tensor::new(
+    let mut tensor_b = Tensor::new(
+        4,
         3,
-        2,
-        vec![vec![20.0, 24.0], vec![19.0, 17.0], vec![21.0, 40.0]],
+        vec![
+            vec![20.0, 24.0, 11.0],
+            vec![19.0, 17.0, 11.0],
+            vec![21.0, 40.0, 11.0],
+            vec![21.0, 40.0, 11.0],
+        ],
     );
 
-    let result = vec![vec![1087., 1328.], vec![1123., 1545.], vec![1705., 2184.]];
+    let mut flattened_tensor = tensor.flatten_to_column();
+    let flattened_tensor_b = tensor_b.flatten();
 
-    let new_tensor = tensor.cross_product(tensor_b);
+    let result = vec![
+        vec![
+            400.0, 480.0, 220.0, 380.0, 340.0, 220.0, 420.0, 800.0, 220.0, 420.0, 800.0, 220.0,
+        ],
+        vec![
+            380.0, 456.0, 209.0, 361.0, 323.0, 209.0, 399.0, 760.0, 209.0, 399.0, 760.0, 209.0,
+        ],
+        vec![
+            420.0, 504.0, 231.0, 399.0, 357.0, 231.0, 441.0, 840.0, 231.0, 441.0, 840.0, 231.0,
+        ],
+        vec![
+            480.0, 576.0, 264.0, 456.0, 408.0, 264.0, 504.0, 960.0, 264.0, 504.0, 960.0, 264.0,
+        ],
+        vec![
+            340.0, 408.0, 187.0, 323.0, 289.0, 187.0, 357.0, 680.0, 187.0, 357.0, 680.0, 187.0,
+        ],
+        vec![
+            800.0, 960.0, 440.0, 760.0, 680.0, 440.0, 840.0, 1600.0, 440.0, 840.0, 1600.0, 440.0,
+        ],
+        vec![
+            220.0, 264.0, 121.0, 209.0, 187.0, 121.0, 231.0, 440.0, 121.0, 231.0, 440.0, 121.0,
+        ],
+        vec![
+            400.0, 480.0, 220.0, 380.0, 340.0, 220.0, 420.0, 800.0, 220.0, 420.0, 800.0, 220.0,
+        ],
+        vec![
+            500.0, 600.0, 275.0, 475.0, 425.0, 275.0, 525.0, 1000.0, 275.0, 525.0, 1000.0, 275.0,
+        ],
+        vec![
+            220.0, 264.0, 121.0, 209.0, 187.0, 121.0, 231.0, 440.0, 121.0, 231.0, 440.0, 121.0,
+        ],
+        vec![
+            220.0, 264.0, 121.0, 209.0, 187.0, 121.0, 231.0, 440.0, 121.0, 231.0, 440.0, 121.0,
+        ],
+        vec![
+            220.0, 264.0, 121.0, 209.0, 187.0, 121.0, 231.0, 440.0, 121.0, 231.0, 440.0, 121.0,
+        ],
+    ];
+
+    let new_tensor = flattened_tensor.product(flattened_tensor_b);
 
     println!("Results for test_tensor_cross_product:");
     for i in 0..(new_tensor.matrix.len()) {
@@ -165,39 +210,35 @@ fn test_tensor_cross_product() {
 }
 
 #[test]
-fn test_flattened_tensor_cross_product() {
+fn test_tensor_apply_function() {
     let mut tensor = Tensor::new(
-        3,
-        3,
+        6,
+        6,
         vec![
-            vec![20.0, 24.0, 11.0],
-            vec![19.0, 17.0, 20.0],
-            vec![21.0, 40.0, 25.0],
+            vec![20.0, 24.0, 11.0, 12.0, 16.0, 19.0],
+            vec![19.0, 17.0, 20.0, 23.0, 15.0, 9.0],
+            vec![21.0, 40.0, 25.0, 13.0, 14.0, 8.0],
+            vec![9.0, 18.0, 8.0, 6.0, 11.0, 22.0],
+            vec![31.0, 3.0, 7.0, 9.0, 17.0, 23.0],
+            vec![20.0, 12.0, 3.0, 11.0, 19.0, 30.0],
         ],
     );
 
-    let mut tensor_b = Tensor::new(
-        3,
-        2,
-        vec![vec![20.0, 24.0], vec![19.0, 17.0], vec![21.0, 40.0]],
-    );
-
-    let mut flattened_tensor = tensor.flatten();
-    let flattened_tensor_b = tensor_b.flatten();
+    let new_tensor = tensor.apply(|val| -> f32 { val * val * val * val });
 
     let result = vec![
-        vec![1087.0, 1328.0],
-        vec![1123.0, 1545.0],
-        vec![1705.0, 2184.0],
+        vec![160000.0, 331776.0, 14641.0, 20736.0, 65536.0, 130321.0],
+        vec![130321.0, 83521.0, 160000.0, 279841.0, 50625.0, 6561.0],
+        vec![194481.0, 2560000.0, 390625.0, 28561.0, 38416.0, 4096.0],
+        vec![6561.0, 104976.0, 4096.0, 1296.0, 14641.0, 234256.0],
+        vec![923521.0, 81.0, 2401.0, 6561.0, 83521.0, 279841.0],
+        vec![160000.0, 20736.0, 81.0, 14641.0, 130321.0, 810000.0],
     ];
 
-    let new_tensor = flattened_tensor.cross_product(flattened_tensor_b);
-
-    println!("Results for test_tensor_cross_product:");
+    println!();
     for i in 0..(new_tensor.matrix.len()) {
         println!("{:?}", new_tensor.matrix[i]);
     }
-    println!("\n");
 
-    assert_eq!(new_tensor.matrix, result);
+    assert_eq!(new_tensor.matrix, result)
 }
