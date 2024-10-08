@@ -224,7 +224,7 @@ fn test_tensor_apply_function() {
         ],
     );
 
-    let new_tensor = tensor.apply(|val| -> f32 { val * val * val * val });
+    let new_tensor = tensor.apply(|val| -> f32 { val.powi(4) });
 
     let result = vec![
         vec![160000.0, 331776.0, 14641.0, 20736.0, 65536.0, 130321.0],

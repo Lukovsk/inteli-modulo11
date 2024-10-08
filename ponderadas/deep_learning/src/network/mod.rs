@@ -1,3 +1,3 @@
-mod layer;
 mod network;
-mod tensor;
+
+pub use network::Network;

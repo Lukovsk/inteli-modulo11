@@ -12,3 +12,12 @@ impl Shape {
         self.rows * self.cols
     }
 }
+
+impl Clone for Shape {
+    fn clone(&self) -> Shape {
+        Shape {
+            rows: self.rows,
+            cols: self.cols,
+        }
+    }
+}

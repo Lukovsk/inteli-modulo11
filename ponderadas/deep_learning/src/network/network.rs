@@ -1,24 +1,24 @@
+use crate::{layer::Layer, Tensor};
+
 pub struct Network {
-    layers: Vec<Layer>,
-    input_shape: Shape,
-    output_shape: Shape,
-    learning_rate: f32,
+    layers: Vec<Box<dyn Layer>>,
 }
 
 impl Network {
-    pub fn new(input_shape: Shape, output_shape: Shape, learning_rate: f32) -> Network {
-        Network {
-            layers: Vec::new(),
-            input_shape,
-            output_shape,
-            learning_rate,
-        }
+    pub fn new() -> Network {
+        Network { layers: Vec::new() }
     }
-    pub fn add_layer(&mut self, layer: Layer) {
+
+    pub fn add_layer(&mut self, layer: Box<dyn Layer>) {
         self.layers.push(layer);
     }
 
-    pub fn forward_pass(&self, input_tensor: &Tensor) -> Tensor {}
+    pub fn forward(&mut self, input: &mut Tensor) -> Tensor {
+        let mut output: Tensor = input.clone();
+        for layer in &self.layers {
+            output = layer.foward(&mut output);
+        }
 
-    pub fn backward_pass(&mut self, input_tensor: &Tensor, output_gradients: &Tensor) {}
+        output
+    }
 }

@@ -4,7 +4,7 @@ use super::Shape;
 
 pub struct Tensor {
     pub matrix: Vec<Vec<f32>>,
-    shape: Shape,
+    pub shape: Shape,
 }
 
 impl Tensor {
@@ -142,7 +142,10 @@ impl Tensor {
         flatten_vector
     }
 
-    pub fn apply(&mut self, function: fn(number: f32) -> f32) -> Tensor {
+    pub fn apply<F>(&mut self, function: F) -> Tensor
+    where
+        F: Fn(f32) -> f32,
+    {
         let mut new_tensor = Tensor::new(
             self.shape.rows,
             self.shape.cols,
@@ -200,5 +203,14 @@ impl Tensor {
         }
 
         new_tensor
+    }
+}
+
+impl Clone for Tensor {
+    fn clone(&self) -> Tensor {
+        Tensor {
+            matrix: self.matrix.clone(),
+            shape: self.shape.clone(),
+        }
     }
 }
