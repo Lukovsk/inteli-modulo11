@@ -1,0 +1,4 @@
+image width: 1414
+image height: 930
+normalized output rows: 327584
+normalized output cols: 9

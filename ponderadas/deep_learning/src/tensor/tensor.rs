@@ -58,7 +58,10 @@ impl Tensor {
 
     pub fn average_pooling(&mut self, shape: Shape) -> Tensor {
         if self.shape.rows % shape.rows != 0 || self.shape.cols % shape.cols != 0 {
-            panic!("Invalid pooling size");
+            panic!(
+                "Invalid pooling size {} x {} vs {} x {}",
+                self.shape.rows, self.shape.cols, shape.rows, shape.cols
+            );
         }
 
         let rows = self.shape.rows / shape.rows;
