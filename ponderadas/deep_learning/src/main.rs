@@ -51,7 +51,7 @@ fn main() {
     println!("normalized output rows: {:?}", normalized_output.shape.rows);
     println!("normalized output cols: {:?}", normalized_output.shape.cols);
 
-    tensor_to_image(&normalized_output, "output/imagem2.png");
+    tensor_to_image(&normalized_output, "output/imagem.png");
 
     // println!("{:?}", output.matrix)
 }
